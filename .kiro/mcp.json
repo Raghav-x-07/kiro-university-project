@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "cloud-auditor-context": {
+      "command": "python",
+      "args": ["-m", "http.server", "8000"],
+      "env": {
+        "AUDITOR_ENV": "production",
+        "PYTHONPATH": ".",
+        "LOG_LEVEL": "INFO"
+      },
+      "disabled": false,
+      "autoApprove": ["context", "audit", "scan"]
+    }
+  }
+}

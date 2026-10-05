@@ -1,0 +1,30 @@
+{
+  "name": "cloud-auditor-power",
+  "version": "1.0.0",
+  "description": "A reusable audit scanner power for infrastructure health and security posture.",
+  "entrypoint": "app.py",
+  "author": "Cloud Security Team",
+  "keywords": ["security", "compliance", "audit", "aws", "cloud"],
+  "dependencies": {
+    "python": ">=3.8",
+    "pytest": ">=7.4.0",
+    "hypothesis": ">=6.80.0"
+  },
+  "capabilities": [
+    "S3 bucket security scanning",
+    "EC2 instance vulnerability assessment", 
+    "IAM policy privilege analysis",
+    "Compliance score calculation",
+    "ASCII report generation"
+  ],
+  "permissions": {
+    "fileSystem": "read-write",
+    "networkAccess": false,
+    "cloudAPIs": false
+  },
+  "configuration": {
+    "mockDataPath": "data/",
+    "outputFormat": "ascii",
+    "scoringAlgorithm": "weighted-severity"
+  }
+}

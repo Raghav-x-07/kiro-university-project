@@ -1,0 +1,25 @@
+{
+  "name": "cloud-auditor",
+  "description": "Specialized autonomous agent for cloud posture analysis, compliance scoring, and property-based test validation.",
+  "version": "1.0.0",
+  "tools": ["read", "write", "shell"],
+  "includeMcpJson": true,
+  "capabilities": {
+    "cloudScanning": true,
+    "complianceAnalysis": true,
+    "securityAssessment": true,
+    "propertyBasedTesting": true
+  },
+  "restrictions": {
+    "noExternalAPIs": true,
+    "mockDataOnly": true,
+    "deterministicOutput": true
+  },
+  "specializations": [
+    "AWS security posture evaluation",
+    "S3 bucket ACL analysis", 
+    "EC2 security group assessment",
+    "IAM policy wildcard detection",
+    "Compliance score calculation"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Quality Gate Validation",
+  "version": "1.0.0",
+  "description": "Automated quality checks and validation hooks for Python files",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["*.py", "*.json"]
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "python -m py_compile app.py || true",
+    "timeout": 30
+  }
+}
