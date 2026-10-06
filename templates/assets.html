@@ -375,8 +375,8 @@
                     </h6>
                 </div>
                 <div class="card-body">
-                    {% set high_priv_policies = assets.iam | selectattr('policy_name', 'match', '.*Admin.*|.*PowerUser.*') | list | length %}
-                    {% set readonly_policies = assets.iam | selectattr('policy_name', 'match', '.*ReadOnly.*') | list | length %}
+                    {% set high_priv_policies = assets.iam | selectattr('policy_name', 'in', ['AdminAccess', 'PowerUserAccess']) | list | length %}
+                    {% set readonly_policies = assets.iam | selectattr('policy_name', 'equalto', 'S3ReadOnlyAccess') | list | length %}
                     
                     <div class="d-flex justify-content-between mb-2">
                         <span>High Privilege:</span>
