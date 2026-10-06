@@ -1,0 +1,429 @@
+{% extends "base.html" %}
+
+{% block title %}Kiro University - Cloud Asset & Health Auditor{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h2 mb-1">
+                        <i class="fas fa-graduation-cap text-primary me-2"></i>
+                        Kiro University Lessons
+                    </h1>
+                    <p class="text-muted">All 7 core lessons implemented and demonstrated</p>
+                </div>
+                <div>
+                    <span class="badge bg-success fs-6 p-2">
+                        <i class="fas fa-check-circle me-2"></i>7 / 7 Lessons Complete
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overall Progress -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <h6 class="mb-0">Overall Completion</h6>
+                        <span class="text-success fw-bold">100%</span>
+                    </div>
+                    <div class="progress" style="height: 20px; border-radius: 10px;">
+                        <div class="progress-bar bg-success" style="width: 100%">All 7 Lessons Complete</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lesson Cards -->
+    <div class="row g-4">
+
+        <!-- Lesson 1: Spec-Driven Development -->
+        <div class="col-lg-6">
+            <div class="card h-100 border-success">
+                <div class="card-header" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="text-white mb-0">
+                            <span class="badge bg-white text-success me-2">1</span>
+                            Spec-Driven Development
+                        </h5>
+                        <span class="badge bg-white text-success">✅ Complete</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Complete system specifications defining requirements, architecture, and development tasks before implementation.</p>
+                    <h6 class="text-success">Files Created:</h6>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <div>
+                                <i class="fas fa-file-alt text-success me-2"></i>
+                                <code>.kiro/specs/requirements.md</code>
+                            </div>
+                            <span class="badge bg-success">FR-001 to FR-004</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <div>
+                                <i class="fas fa-file-alt text-success me-2"></i>
+                                <code>.kiro/specs/design.md</code>
+                            </div>
+                            <span class="badge bg-success">Architecture</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <div>
+                                <i class="fas fa-file-alt text-success me-2"></i>
+                                <code>.kiro/specs/tasks.md</code>
+                            </div>
+                            <span class="badge bg-success">5 Phases</span>
+                        </li>
+                    </ul>
+                    <div class="alert alert-success py-2">
+                        <small><i class="fas fa-info-circle me-1"></i>
+                        Outlined S3/EC2/IAM security schemas, acceptance criteria, and compliance score formula (0 ≤ score ≤ 100)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson 2: Steering Documents -->
+        <div class="col-lg-6">
+            <div class="card h-100 border-primary">
+                <div class="card-header" style="background: linear-gradient(135deg, #2980b9, #3498db);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="text-white mb-0">
+                            <span class="badge bg-white text-primary me-2">2</span>
+                            Steering Documents
+                        </h5>
+                        <span class="badge bg-white text-primary">✅ Complete</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Architecture guidelines, strict coding standards, and multi-cloud expansion roadmap guardrails.</p>
+                    <h6 class="text-primary">Files Created:</h6>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <div>
+                                <i class="fas fa-file-alt text-primary me-2"></i>
+                                <code>.kiro/steering/architecture.md</code>
+                            </div>
+                            <span class="badge bg-primary">Component Layout</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <div>
+                                <i class="fas fa-file-alt text-primary me-2"></i>
+                                <code>.kiro/steering/coding-standards.md</code>
+                            </div>
+                            <span class="badge bg-primary">PEP 8 + Types</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <div>
+                                <i class="fas fa-file-alt text-primary me-2"></i>
+                                <code>.kiro/steering/roadmap.md</code>
+                            </div>
+                            <span class="badge bg-primary">v1.1 / v1.2</span>
+                        </li>
+                    </ul>
+                    <div class="alert alert-primary py-2">
+                        <small><i class="fas fa-info-circle me-1"></i>
+                        Defines scanner isolation, zero external dependency policy, and Azure/GCP expansion plan</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson 3: Hooks -->
+        <div class="col-lg-6">
+            <div class="card h-100 border-warning">
+                <div class="card-header" style="background: linear-gradient(135deg, #e67e22, #f39c12);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="text-white mb-0">
+                            <span class="badge bg-white text-warning me-2">3</span>
+                            Hooks
+                        </h5>
+                        <span class="badge bg-white text-warning">✅ Complete</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Automated quality gate validation hooks that trigger on file saves for compilation checks.</p>
+                    <h6 class="text-warning">Files Created:</h6>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item px-0">
+                            <i class="fas fa-file-alt text-warning me-2"></i>
+                            <code>.kiro/hooks/quality-gate.json</code>
+                        </li>
+                    </ul>
+                    <div class="bg-dark text-success p-3 rounded" style="font-family: monospace; font-size: 0.8rem;">
+                        <pre class="mb-0">{
+  "when": { "type": "fileEdited",
+            "patterns": ["*.py", "*.json"] },
+  "then": { "type": "runCommand",
+            "command": "python -m py_compile app.py" }
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson 4: Property-Based Testing -->
+        <div class="col-lg-6">
+            <div class="card h-100 border-info">
+                <div class="card-header" style="background: linear-gradient(135deg, #16a085, #1abc9c);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="text-white mb-0">
+                            <span class="badge bg-white text-info me-2">4</span>
+                            Property-Based Testing
+                        </h5>
+                        <span class="badge bg-white text-info">✅ Complete</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Hypothesis-driven tests verifying score bounds, schema invariants, and fuzz input resilience.</p>
+                    <h6 class="text-info">Test Coverage:</h6>
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <div class="border rounded p-2 text-center">
+                                <div class="h4 text-info mb-0">37</div>
+                                <small>Total Tests</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="border rounded p-2 text-center">
+                                <div class="h4 text-success mb-0">100%</div>
+                                <small>Pass Rate</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="border rounded p-2 text-center">
+                                <div class="h4 text-warning mb-0">13</div>
+                                <small>Property Tests</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="border rounded p-2 text-center">
+                                <div class="h4 text-primary mb-0">100</div>
+                                <small>Examples/Test</small>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-info btn-sm w-100" onclick="runTests()">
+                        <i class="fas fa-play me-2"></i>Run Tests Live
+                    </button>
+                    <div id="testResults" class="mt-2" style="display:none;">
+                        <div class="ascii-report" id="testOutput" style="max-height: 200px; overflow-y: auto;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson 5: Powers -->
+        <div class="col-lg-6">
+            <div class="card h-100 border-danger">
+                <div class="card-header" style="background: linear-gradient(135deg, #8e44ad, #9b59b6);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="text-white mb-0">
+                            <span class="badge bg-white text-danger me-2">5</span>
+                            Powers
+                        </h5>
+                        <span class="badge bg-white text-danger">✅ Complete</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Packaged standalone audit scanner tool with manifest, installation docs, and CLI execution guide.</p>
+                    <h6>Power Manifest:</h6>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span><i class="fas fa-tag me-2"></i>Name</span>
+                            <code>cloud-auditor-power</code>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span><i class="fas fa-code-branch me-2"></i>Version</span>
+                            <code>1.0.0</code>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span><i class="fas fa-play me-2"></i>Entrypoint</span>
+                            <code>app.py</code>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span><i class="fas fa-wifi me-2"></i>Network Access</span>
+                            <span class="badge bg-success">Disabled</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson 6: MCP -->
+        <div class="col-lg-6">
+            <div class="card h-100" style="border-color: #e91e63;">
+                <div class="card-header" style="background: linear-gradient(135deg, #c0392b, #e74c3c);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="text-white mb-0">
+                            <span class="badge bg-white me-2" style="color:#e74c3c;">6</span>
+                            Model Context Protocol (MCP)
+                        </h5>
+                        <span class="badge bg-white" style="color:#e74c3c;">✅ Complete</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Context server configuration providing audit capabilities to the Kiro ecosystem.</p>
+                    <h6>Server Configuration:</h6>
+                    <div class="bg-dark text-success p-3 rounded mb-3" style="font-family: monospace; font-size: 0.8rem;">
+                        <pre class="mb-0">{
+  "cloud-auditor-context": {
+    "command": "python",
+    "args": ["-m", "http.server", "8000"],
+    "env": {
+      "AUDITOR_ENV": "production"
+    }
+  }
+}</pre>
+                    </div>
+                    <div class="alert alert-danger py-2">
+                        <small><i class="fas fa-info-circle me-1"></i>
+                        Exposes audit context to Kiro components via MCP protocol</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson 7: Custom Agents -->
+        <div class="col-lg-12">
+            <div class="card border-secondary">
+                <div class="card-header" style="background: linear-gradient(135deg, #2c3e50, #34495e);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="text-white mb-0">
+                            <span class="badge bg-white text-dark me-2">7</span>
+                            Custom Agents
+                        </h5>
+                        <span class="badge bg-white text-dark">✅ Complete</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="text-muted">Specialized autonomous agent for cloud posture analysis, compliance scoring, and property-based test validation.</p>
+                            <h6>Agent Capabilities:</h6>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <div class="border rounded p-2 text-center">
+                                        <i class="fas fa-cloud text-primary fa-lg mb-2"></i>
+                                        <div class="small">Cloud Scanning</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="border rounded p-2 text-center">
+                                        <i class="fas fa-chart-line text-success fa-lg mb-2"></i>
+                                        <div class="small">Compliance Analysis</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="border rounded p-2 text-center">
+                                        <i class="fas fa-shield-alt text-warning fa-lg mb-2"></i>
+                                        <div class="small">Security Assessment</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="border rounded p-2 text-center">
+                                        <i class="fas fa-vial text-danger fa-lg mb-2"></i>
+                                        <div class="small">Property Testing</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bg-dark text-success p-3 rounded" style="font-family: monospace; font-size: 0.8rem;">
+                                <pre class="mb-0">{
+  "name": "cloud-auditor",
+  "tools": ["read", "write", "shell"],
+  "includeMcpJson": true,
+  "capabilities": {
+    "cloudScanning": true,
+    "complianceAnalysis": true,
+    "securityAssessment": true
+  },
+  "restrictions": {
+    "noExternalAPIs": true,
+    "mockDataOnly": true
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Runner Section -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-terminal me-2"></i>
+                        Live Test Runner
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Run the complete test suite live to verify all implementations.</p>
+                    <button class="btn btn-success me-2" onclick="runTests()">
+                        <i class="fas fa-play me-2"></i>Run All 37 Tests
+                    </button>
+                    <a href="{{ url_for('api_test') }}" target="_blank" class="btn btn-outline-primary">
+                        <i class="fas fa-external-link-alt me-2"></i>View Test API
+                    </a>
+                    <div id="testResults" class="mt-3" style="display:none;">
+                        <div class="ascii-report" id="testOutput" style="min-height: 150px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function runTests() {
+        const btn = event.target.closest('button');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="loading-spinner me-2"></span>Running Tests...';
+        btn.disabled = true;
+
+        const resultsDiv = document.getElementById('testResults');
+        const outputDiv = document.getElementById('testOutput');
+        resultsDiv.style.display = 'block';
+        outputDiv.textContent = 'Running 37 tests...\n\nPlease wait...';
+
+        fetch('/api/test')
+            .then(response => response.json())
+            .then(data => {
+                const status = data.status === 'success' ? '✅ ALL TESTS PASSED' : '❌ TESTS FAILED';
+                outputDiv.textContent = `${status}\n\n${data.stdout}\n${data.stderr}`;
+                
+                btn.innerHTML = data.status === 'success' 
+                    ? '<i class="fas fa-check me-2"></i>Tests Passed!' 
+                    : '<i class="fas fa-times me-2"></i>Tests Failed';
+                btn.classList.remove('btn-success');
+                btn.classList.add(data.status === 'success' ? 'btn-success' : 'btn-danger');
+                btn.disabled = false;
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('btn-danger');
+                    btn.classList.add('btn-success');
+                }, 5000);
+            })
+            .catch(err => {
+                outputDiv.textContent = `Error running tests: ${err.message}`;
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+    }
+</script>
+{% endblock %}

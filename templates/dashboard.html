@@ -1,0 +1,350 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Cloud Asset & Health Auditor{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h2 mb-1">
+                        <i class="fas fa-tachometer-alt text-primary me-2"></i>
+                        Security Dashboard
+                    </h1>
+                    <p class="text-muted">Real-time cloud infrastructure security monitoring</p>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="location.reload(); showLoading(this)">
+                        <i class="fas fa-sync-alt me-2"></i>Refresh
+                    </button>
+                    <a href="{{ url_for('audit_page') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-search me-2"></i>Run Audit
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Metrics Row -->
+    <div class="row g-4 mb-4">
+        <!-- Compliance Score -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100">
+                <div class="card-body metric-card">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="metric-value text-{{ data.status }}">{{ data.compliance_score }}%</div>
+                            <div class="metric-label">Compliance Score</div>
+                        </div>
+                        <div class="text-{{ data.status }}">
+                            <i class="fas fa-shield-alt fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="progress progress-custom mt-3">
+                        <div class="progress-bar bg-{{ data.status }}" style="width: {{ data.compliance_score }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Assets -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100">
+                <div class="card-body metric-card">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="metric-value text-info">{{ data.total_assets }}</div>
+                            <div class="metric-label">Total Assets</div>
+                        </div>
+                        <div class="text-info">
+                            <i class="fas fa-server fa-2x"></i>
+                        </div>
+                    </div>
+                    <small class="text-muted">
+                        <i class="fas fa-database me-1"></i>{{ data.asset_breakdown.s3 }} S3 •
+                        <i class="fas fa-desktop me-1"></i>{{ data.asset_breakdown.ec2 }} EC2 •
+                        <i class="fas fa-user-shield me-1"></i>{{ data.asset_breakdown.iam }} IAM
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Violations -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100">
+                <div class="card-body metric-card">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="metric-value text-warning">{{ data.total_findings }}</div>
+                            <div class="metric-label">Security Issues</div>
+                        </div>
+                        <div class="text-warning">
+                            <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        </div>
+                    </div>
+                    <small class="text-muted">
+                        <span class="text-danger">{{ data.critical_issues }} Critical</span> •
+                        <span class="text-warning">{{ data.high_issues }} High</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Last Scan -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100">
+                <div class="card-body metric-card">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="metric-value text-success">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="metric-label">System Status</div>
+                        </div>
+                        <div class="text-success">
+                            <i class="fas fa-heartbeat fa-2x"></i>
+                        </div>
+                    </div>
+                    <small class="text-muted">
+                        <i class="fas fa-clock me-1"></i>{{ data.last_scan }}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts and Analysis Row -->
+    <div class="row g-4 mb-4">
+        <!-- Risk Distribution Chart -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-pie me-2"></i>
+                        Risk Distribution
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="riskChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Asset Breakdown Chart -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        Asset Breakdown
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="assetChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Findings -->
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list me-2"></i>
+                            Critical Security Findings
+                        </h5>
+                        <a href="{{ url_for('audit_page') }}" class="btn btn-sm btn-outline-light">
+                            View All Findings
+                            <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if data.critical_issues > 0 %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-exclamation-circle"></i> Severity</th>
+                                        <th><i class="fas fa-server"></i> Asset Type</th>
+                                        <th><i class="fas fa-info-circle"></i> Description</th>
+                                        <th><i class="fas fa-tools"></i> Action Required</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="severity-badge severity-critical">CRITICAL</span></td>
+                                        <td><i class="fas fa-database text-primary"></i> S3 Bucket</td>
+                                        <td>Public write access detected on production bucket</td>
+                                        <td><span class="text-danger">Immediate Action Required</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="severity-badge severity-critical">CRITICAL</span></td>
+                                        <td><i class="fas fa-desktop text-success"></i> EC2 Instance</td>
+                                        <td>SSH port open to internet (0.0.0.0/0)</td>
+                                        <td><span class="text-danger">Immediate Action Required</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="severity-badge severity-critical">CRITICAL</span></td>
+                                        <td><i class="fas fa-user-shield text-warning"></i> IAM Policy</td>
+                                        <td>Wildcard permissions in production role</td>
+                                        <td><span class="text-danger">Immediate Action Required</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-shield-alt text-success fa-3x mb-3"></i>
+                            <h5 class="text-success">No Critical Issues Found</h5>
+                            <p class="text-muted">Your infrastructure appears to be secure with no critical vulnerabilities detected.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row g-4 mt-2">
+        <div class="col-md-4">
+            <div class="card border-primary">
+                <div class="card-body text-center">
+                    <i class="fas fa-search text-primary fa-2x mb-3"></i>
+                    <h6>Run Security Audit</h6>
+                    <p class="small text-muted">Comprehensive security assessment of all assets</p>
+                    <a href="{{ url_for('audit_page') }}" class="btn btn-primary btn-sm">Start Audit</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-info">
+                <div class="card-body text-center">
+                    <i class="fas fa-server text-info fa-2x mb-3"></i>
+                    <h6>View Assets</h6>
+                    <p class="small text-muted">Browse complete asset inventory and details</p>
+                    <a href="{{ url_for('assets_page') }}" class="btn btn-info btn-sm">View Assets</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-success">
+                <div class="card-body text-center">
+                    <i class="fas fa-graduation-cap text-success fa-2x mb-3"></i>
+                    <h6>Kiro University</h6>
+                    <p class="small text-muted">View implementation of all 7 core lessons</p>
+                    <a href="{{ url_for('kiro_university') }}" class="btn btn-success btn-sm">View Lessons</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Risk Distribution Chart
+    const riskCtx = document.getElementById('riskChart').getContext('2d');
+    const riskChart = new Chart(riskCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Critical', 'High', 'Medium', 'Low'],
+            datasets: [{
+                data: [
+                    {{ data.risk_distribution.CRITICAL }},
+                    {{ data.risk_distribution.HIGH }},
+                    {{ data.risk_distribution.MEDIUM }},
+                    {{ data.risk_distribution.LOW }}
+                ],
+                backgroundColor: [
+                    '#e74c3c',  // Critical - Red
+                    '#f39c12',  // High - Orange  
+                    '#17a2b8',  // Medium - Blue
+                    '#27ae60'   // Low - Green
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label;
+                            const value = context.parsed;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Asset Breakdown Chart
+    const assetCtx = document.getElementById('assetChart').getContext('2d');
+    const assetChart = new Chart(assetCtx, {
+        type: 'bar',
+        data: {
+            labels: ['S3 Buckets', 'EC2 Instances', 'IAM Policies'],
+            datasets: [{
+                label: 'Asset Count',
+                data: [
+                    {{ data.asset_breakdown.s3 }},
+                    {{ data.asset_breakdown.ec2 }},
+                    {{ data.asset_breakdown.iam }}
+                ],
+                backgroundColor: [
+                    '#3498db',  // S3 - Blue
+                    '#27ae60',  // EC2 - Green
+                    '#f39c12'   // IAM - Orange
+                ],
+                borderColor: [
+                    '#2980b9',
+                    '#229954', 
+                    '#e67e22'
+                ],
+                borderWidth: 1,
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

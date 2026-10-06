@@ -1,0 +1,306 @@
+{% extends "base.html" %}
+
+{% block title %}Security Audit - Cloud Asset & Health Auditor{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h2 mb-1">
+                        <i class="fas fa-search text-primary me-2"></i>
+                        Security Audit Report
+                    </h1>
+                    <p class="text-muted">
+                        <i class="fas fa-clock me-1"></i>
+                        Generated on {{ data.scan_timestamp }}
+                    </p>
+                </div>
+                <div>
+                    <button class="btn btn-success" onclick="location.reload(); showLoading(this)">
+                        <i class="fas fa-play me-2"></i>Run New Audit
+                    </button>
+                    <button class="btn btn-outline-primary" onclick="downloadReport()">
+                        <i class="fas fa-download me-2"></i>Export Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audit Summary Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-{{ 'danger' if data.overall_score < 30 else 'warning' if data.overall_score < 70 else 'success' }} h-100">
+                <div class="card-body text-center">
+                    <div class="display-4 text-{{ 'danger' if data.overall_score < 30 else 'warning' if data.overall_score < 70 else 'success' }}">
+                        {{ data.overall_score }}%
+                    </div>
+                    <h6 class="card-title">Compliance Score</h6>
+                    <div class="progress progress-custom mt-2">
+                        <div class="progress-bar bg-{{ 'danger' if data.overall_score < 30 else 'warning' if data.overall_score < 70 else 'success' }}" 
+                             style="width: {{ data.overall_score }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-info h-100">
+                <div class="card-body text-center">
+                    <div class="display-4 text-info">{{ data.total_assets }}</div>
+                    <h6 class="card-title">Assets Scanned</h6>
+                    <small class="text-muted">Complete infrastructure audit</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-warning h-100">
+                <div class="card-body text-center">
+                    <div class="display-4 text-warning">{{ data.total_findings }}</div>
+                    <h6 class="card-title">Total Findings</h6>
+                    <small class="text-muted">Security issues detected</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-danger h-100">
+                <div class="card-body text-center">
+                    <div class="display-4 text-danger">
+                        {{ data.findings_by_severity.CRITICAL | length }}
+                    </div>
+                    <h6 class="card-title">Critical Issues</h6>
+                    <small class="text-muted">Require immediate attention</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Findings by Severity -->
+    <div class="row g-4 mb-4">
+        {% for severity, findings in data.findings_by_severity.items() %}
+        {% if findings %}
+        <div class="col-lg-6 col-xl-3">
+            <div class="card h-100">
+                <div class="card-header bg-{{ 'danger' if severity == 'CRITICAL' else 'warning' if severity == 'HIGH' else 'info' if severity == 'MEDIUM' else 'success' }}">
+                    <h6 class="text-white mb-0">
+                        <i class="fas fa-{{ 'exclamation-triangle' if severity == 'CRITICAL' else 'exclamation-circle' if severity == 'HIGH' else 'info-circle' if severity == 'MEDIUM' else 'check-circle' }} me-2"></i>
+                        {{ severity }} Issues ({{ findings | length }})
+                    </h6>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for finding in findings[:3] %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">{{ finding.asset_id }}</div>
+                                    <small class="text-muted">{{ finding.description[:60] }}...</small>
+                                </div>
+                                <span class="badge bg-{{ 'primary' if finding.asset_type == 's3' else 'success' if finding.asset_type == 'ec2' else 'warning' }}">
+                                    {{ finding.asset_type.upper() }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% if findings | length > 3 %}
+                        <div class="list-group-item text-center">
+                            <small class="text-muted">+ {{ findings | length - 3 }} more findings</small>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <!-- Detailed Findings Table -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list-ul me-2"></i>
+                            Detailed Security Findings
+                        </h5>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary" onclick="filterFindings('all')">All</button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="filterFindings('CRITICAL')">Critical</button>
+                            <button class="btn btn-sm btn-outline-warning" onclick="filterFindings('HIGH')">High</button>
+                            <button class="btn btn-sm btn-outline-info" onclick="filterFindings('MEDIUM')">Medium</button>
+                            <button class="btn btn-sm btn-outline-success" onclick="filterFindings('LOW')">Low</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="findingsTable">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th><i class="fas fa-exclamation-circle"></i> Severity</th>
+                                    <th><i class="fas fa-tag"></i> Finding ID</th>
+                                    <th><i class="fas fa-server"></i> Asset</th>
+                                    <th><i class="fas fa-info-circle"></i> Description</th>
+                                    <th><i class="fas fa-tools"></i> Remediation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for result in data.results %}
+                                    {% for finding in result.findings %}
+                                    <tr class="finding-row" data-severity="{{ finding.severity }}">
+                                        <td>
+                                            <span class="severity-badge severity-{{ finding.severity.lower() }}">
+                                                {{ finding.severity }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <code class="small">{{ finding.finding_id }}</code>
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-{{ 'database' if result.asset_type == 's3' else 'desktop' if result.asset_type == 'ec2' else 'user-shield' }} 
+                                               text-{{ 'primary' if result.asset_type == 's3' else 'success' if result.asset_type == 'ec2' else 'warning' }} me-2"></i>
+                                            {{ result.asset_id }}
+                                            <br>
+                                            <small class="text-muted">{{ result.asset_type.upper() }}</small>
+                                        </td>
+                                        <td>{{ finding.description }}</td>
+                                        <td>
+                                            <small class="text-muted">{{ finding.remediation }}</small>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ASCII Report -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-terminal me-2"></i>
+                            Console Report
+                        </h5>
+                        <button class="btn btn-sm btn-outline-light" onclick="copyToClipboard('asciiReport')">
+                            <i class="fas fa-copy me-2"></i>Copy Report
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="ascii-report" id="asciiReport">{{ data.ascii_report }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Asset Type Breakdown -->
+    <div class="row">
+        {% for asset_type, findings in data.findings_by_type.items() %}
+        {% if findings %}
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-{{ 'primary' if asset_type == 's3' else 'success' if asset_type == 'ec2' else 'warning' }}">
+                    <h6 class="text-white mb-0">
+                        <i class="fas fa-{{ 'database' if asset_type == 's3' else 'desktop' if asset_type == 'ec2' else 'user-shield' }} me-2"></i>
+                        {{ asset_type.upper() }} Assets ({{ findings | length }} issues)
+                    </h6>
+                </div>
+                <div class="card-body">
+                    {% for finding in findings[:5] %}
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                        <div>
+                            <div class="small fw-bold">{{ finding.asset_id }}</div>
+                            <div class="small text-muted">{{ finding.description[:50] }}...</div>
+                        </div>
+                        <span class="severity-badge severity-{{ finding.severity.lower() }}">
+                            {{ finding.severity }}
+                        </span>
+                    </div>
+                    {% endfor %}
+                    {% if findings | length > 5 %}
+                    <div class="text-center">
+                        <small class="text-muted">+ {{ findings | length - 5 }} more issues</small>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function filterFindings(severity) {
+        const rows = document.querySelectorAll('#findingsTable .finding-row');
+        
+        rows.forEach(row => {
+            if (severity === 'all' || row.dataset.severity === severity) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        
+        // Update button states
+        document.querySelectorAll('[onclick^="filterFindings"]').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+    }
+
+    function copyToClipboard(elementId) {
+        const element = document.getElementById(elementId);
+        const text = element.textContent;
+        
+        navigator.clipboard.writeText(text).then(() => {
+            // Show success message
+            const btn = event.target.closest('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check me-2"></i>Copied!';
+            btn.classList.add('btn-success');
+            btn.classList.remove('btn-outline-light');
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-outline-light');
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            alert('Failed to copy to clipboard');
+        });
+    }
+
+    function downloadReport() {
+        const reportContent = document.getElementById('asciiReport').textContent;
+        const blob = new Blob([reportContent], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `security-audit-report-${new Date().toISOString().split('T')[0]}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        
+        showLoading(event.target);
+    }
+</script>
+{% endblock %}
