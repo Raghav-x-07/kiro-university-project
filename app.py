@@ -266,9 +266,16 @@ def validate_asset_type(asset: Dict[str, Any]) -> bool:
 def safe_cast_score(value: Any) -> int:
     """Safely cast and bound compliance scores."""
     try:
+        # Handle special float values first
+        if isinstance(value, float):
+            if not (value == value):  # NaN check
+                return 0
+            if value == float('inf') or value == float('-inf'):
+                return 0
+        
         score = int(value)
         return max(0, min(100, score))
-    except (ValueError, TypeError):
+    except (ValueError, TypeError, OverflowError):
         return 0
 
 
